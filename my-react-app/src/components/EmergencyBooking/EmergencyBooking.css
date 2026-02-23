@@ -1,0 +1,352 @@
+/* ========== Emergency Booking Section ========== */
+.emergency-booking-section {
+  padding: 80px 24px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 248, 255, 0.95) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.emergency-bg-decoration {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.08;
+  pointer-events: none;
+}
+
+.emergency-bg-1 {
+  width: 400px;
+  height: 400px;
+  background: #E63946;
+  top: -150px;
+  right: -150px;
+}
+
+.emergency-bg-2 {
+  width: 300px;
+  height: 300px;
+  background: #0066CC;
+  bottom: -100px;
+  left: -100px;
+}
+
+.emergency-booking-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* ========== Header ========== */
+.emergency-booking-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.emergency-booking-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #E63946;
+  background: linear-gradient(135deg, rgba(230, 57, 70, 0.1) 0%, rgba(230, 57, 70, 0.05) 100%);
+  padding: 10px 20px;
+  border-radius: 24px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(230, 57, 70, 0.2);
+}
+
+.badge-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emergency-booking-title {
+  font-size: 42px;
+  font-weight: 900;
+  color: #1a1a2e;
+  margin-bottom: 12px;
+  letter-spacing: -1px;
+  background: linear-gradient(135deg, #E63946 0%, #0066CC 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.emergency-booking-subtitle {
+  font-size: 16px;
+  color: #555;
+  font-weight: 500;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ========== Path Container ========== */
+.emergency-path-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  margin-bottom: 60px;
+  position: relative;
+  padding: 40px 0;
+}
+
+.emergency-path-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+/* Connector Line */
+.connector-line {
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #E63946, #0066CC);
+  transform-origin: left;
+  z-index: 0;
+}
+
+.emergency-path-step:last-child .connector-line {
+  display: none;
+}
+
+/* Step Circle */
+.step-circle {
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, #E63946, #0066CC);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(230, 57, 70, 0.3);
+  margin-bottom: 20px;
+}
+
+.step-circle:hover {
+  box-shadow: 0 12px 30px rgba(230, 57, 70, 0.4);
+}
+
+.step-icon-wrapper {
+  width: 60px;
+  height: 60px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.step-icon {
+  color: #E63946;
+  font-size: 28px;
+}
+
+.step-number {
+  position: absolute;
+  bottom: -12px;
+  right: -12px;
+  width: 32px;
+  height: 32px;
+  background: #0066CC;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  border: 3px solid white;
+  box-shadow: 0 2px 8px rgba(0, 102, 204, 0.3);
+}
+
+/* Step Content */
+.step-content {
+  text-align: center;
+  margin-top: 12px;
+  transition: all 0.3s ease;
+}
+
+.step-label {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 4px;
+  letter-spacing: -0.3px;
+}
+
+.step-description {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* ========== CTA Buttons ========== */
+.emergency-booking-cta {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.emergency-cta-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 40px;
+  background: linear-gradient(135deg, #E63946, #c1121f);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(230, 57, 70, 0.3);
+}
+
+.emergency-cta-btn:hover {
+  box-shadow: 0 12px 30px rgba(230, 57, 70, 0.4);
+  transform: translateY(-4px);
+}
+
+.emergency-cta-btn:active {
+  transform: translateY(-2px);
+}
+
+.emergency-secondary-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 40px;
+  background: linear-gradient(135deg, rgba(0, 102, 204, 0.1), rgba(0, 102, 204, 0.05));
+  color: #0066CC;
+  border: 2px solid #0066CC;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  transition: all 0.3s ease;
+}
+
+.emergency-secondary-btn:hover {
+  background: linear-gradient(135deg, rgba(0, 102, 204, 0.2), rgba(0, 102, 204, 0.1));
+  transform: translateY(-4px);
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 1024px) {
+  .emergency-booking-section {
+    padding: 60px 20px;
+  }
+
+  .emergency-path-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+    padding: 30px 0;
+  }
+
+  .connector-line {
+    display: none;
+  }
+
+  .emergency-booking-title {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 640px) {
+  .emergency-booking-section {
+    padding: 50px 16px;
+  }
+
+  .emergency-booking-header {
+    margin-bottom: 40px;
+  }
+
+  .emergency-booking-title {
+    font-size: 26px;
+  }
+
+  .emergency-booking-subtitle {
+    font-size: 14px;
+  }
+
+  .emergency-path-container {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .emergency-booking-badge {
+    font-size: 11px;
+    padding: 8px 16px;
+  }
+
+  .step-circle {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 16px;
+  }
+
+  .step-icon {
+    font-size: 24px;
+  }
+
+  .step-label {
+    font-size: 13px;
+  }
+
+  .step-description {
+    font-size: 11px;
+  }
+
+  .emergency-booking-cta {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .emergency-cta-btn,
+  .emergency-secondary-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 14px 24px;
+    font-size: 13px;
+  }
+
+  .emergency-bg-decoration {
+    opacity: 0.05;
+  }
+
+  .emergency-bg-1 {
+    width: 300px;
+    height: 300px;
+    top: -100px;
+    right: -100px;
+  }
+
+  .emergency-bg-2 {
+    width: 250px;
+    height: 250px;
+    bottom: -80px;
+    left: -80px;
+  }
+}

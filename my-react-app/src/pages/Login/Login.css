@@ -366,3 +366,14 @@
     right: -150px !important;
   }
 }
+
+.error-box {
+  background: #ffebee;
+  border: 1px solid #ef5350;
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: #c62828;
+  font-size: 13px;
+  margin-bottom: 16px;
+  text-align: center;
+}

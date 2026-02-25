@@ -227,8 +227,12 @@
 .navbar-right {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   flex-shrink: 0;
+}
+
+.mobile-auth-buttons {
+  display: none;
 }
 
 .btn-login {
@@ -266,6 +270,42 @@
 .btn-signup:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 102, 204, 0.35);
+}
+
+/* ====== USER INFO & LOGOUT ====== */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a2e;
+  white-space: nowrap;
+  margin: 0;
+  padding: 0;
+}
+
+.btn-logout {
+  padding: 9px 22px;
+  background: transparent;
+  color: #d32f2f;
+  border: 1.5px solid #d32f2f;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 13.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-logout:hover {
+  background: rgba(211, 47, 47, 0.06);
+  transform: translateY(-1px);
 }
 
 /* ====== HAMBURGER ====== */
@@ -330,6 +370,25 @@
   }
 }
 
+@media (max-width: 1200px) {
+  .navbar {
+    padding: 14px 20px;
+  }
+
+  .navbar-search {
+    display: none;
+  }
+
+  .nav-links-group {
+    gap: 2px;
+  }
+
+  .nav-link {
+    font-size: 13px;
+    padding: 7px 12px;
+  }
+}
+
 @media (max-width: 900px) {
   .navbar {
     padding: 12px 16px;
@@ -343,7 +402,8 @@
     position: fixed;
     top: 0;
     right: -100%;
-    width: 320px;
+    width: min(85vw, 380px);
+    max-width: 380px;
     height: 100vh;
     background: #fff;
     flex-direction: column;
@@ -406,6 +466,55 @@
     display: none;
   }
 
+  .mobile-auth-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  .mobile-auth-buttons .user-info {
+    flex-direction: column;
+    align-items: flex-start;
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+  }
+
+  .mobile-auth-buttons .user-name {
+    font-size: 14px;
+  }
+
+  .mobile-auth-buttons .btn-login {
+    width: 100%;
+    text-align: center;
+    padding: 11px 18px;
+    font-size: 13px;
+    border-radius: 8px;
+    font-weight: 700;
+  }
+
+  .mobile-auth-buttons .btn-signup {
+    width: 100%;
+    text-align: center;
+    padding: 11px 18px;
+    font-size: 13px;
+    border-radius: 8px;
+    font-weight: 700;
+  }
+
+  .mobile-auth-buttons .btn-logout {
+    width: 100%;
+    text-align: center;
+    padding: 11px 18px;
+    font-size: 13px;
+    border-radius: 8px;
+    font-weight: 700;
+  }
+
   .mobile-menu-btn {
     display: flex;
   }
@@ -424,7 +533,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .navbar {
     padding: 10px 14px;
   }
@@ -434,13 +543,13 @@
   }
 
   .navbar-logo-img {
-    width: 52px;
-    height: 52px;
+    width: 58px;
+    height: 58px;
     border-radius: 10px;
   }
 
   .navbar-title {
-    font-size: 21px;
+    font-size: 22px;
   }
 
   .navbar-subtitle {
@@ -448,7 +557,65 @@
   }
 
   .navbar-center {
-    width: 280px;
-    padding: 72px 20px 28px;
+    width: min(85vw, 360px);
+    padding: 80px 20px 28px;
+  }
+
+  .nav-link {
+    font-size: 14px;
+    padding: 12px 14px;
+  }
+
+  .navbar-search {
+    height: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 10px 12px;
+  }
+
+  .navbar-logo-container {
+    gap: 6px;
+  }
+
+  .navbar-logo-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+  }
+
+  .navbar-title {
+    font-size: 18px;
+  }
+
+  .navbar-subtitle {
+    font-size: 9px;
+  }
+
+  .navbar-center {
+    width: 90vw;
+    padding: 70px 16px 24px;
+  }
+
+  .nav-link {
+    font-size: 14px;
+    padding: 12px 12px;
+  }
+
+  .navbar-search {
+    height: 34px;
+    margin-top: 14px;
+  }
+
+  .search-input {
+    font-size: 12px;
+  }
+
+  .search-btn {
+    height: 24px;
+    padding: 0 10px;
+    font-size: 10px;
   }
 }

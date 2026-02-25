@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
+import { registerUser, clearError } from '../../store/slices/authSlice';
 import './SignUp.css';
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const [userRole, setUserRole] = useState('patient');
+  const dispatch = useDispatch();
+  const { loading, error, isLoggedIn } = useSelector((state) => state.auth);
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -15,10 +19,29 @@ const SignUp = () => {
     agreeTerms: false,
   });
   const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [registrationSubmitted, setRegistrationSubmitted] = useState(false);
 
+  // Redirect to home only after a successful registration submission
+  useEffect(() => {
+    if (isLoggedIn && registrationSubmitted) {
+      setSuccessMessage('Registration successful! Redirecting...');
+      setTimeout(() => {
+        navigate('/');
+      }, 1500);
+    }
+  }, [isLoggedIn, registrationSubmitted, navigate]);
+
+  // Clear error and reset auth state when component mounts
+  useEffect(() => {
+    // Reset isLoggedIn to false on component mount so user can sign up without immediate redirect
+    // We'll use the isInitialMount flag to handle the redirect after registration
+    return () => {
+      dispatch(clearError());
+    };
+  }, [dispatch]);
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -27,6 +50,9 @@ const SignUp = () => {
     }));
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: '' }));
+    }
+    if (error) {
+      dispatch(clearError());
     }
   };
 
@@ -60,12 +86,18 @@ const SignUp = () => {
       setErrors(newErrors);
       return;
     }
-    setIsLoading(true);
-    setTimeout(() => {
-      console.log('SignUp successful:', { userRole, ...formData });
-      setIsLoading(false);
-      navigate('/login');
-    }, 1500);
+    
+    // Mark that registration was submitted so we know to redirect after success
+    setRegistrationSubmitted(true);
+    
+    // Dispatch registration action
+    dispatch(registerUser({
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      password: formData.password,
+      role: 'USER',
+    }));
   };
 
   const containerVariants = {
@@ -80,12 +112,6 @@ const SignUp = () => {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
   };
-
-  const roles = [
-    { key: 'patient', label: 'Patient' },
-    { key: 'doctor', label: 'Doctor' },
-    { key: 'hospitaladmin', label: 'Hospital Admin' },
-  ];
 
   return (
     <div className="auth-container">
@@ -113,24 +139,30 @@ const SignUp = () => {
 
         <motion.div className="auth-header" variants={itemVariants}>
           <h2>Create Account</h2>
-          <p>Choose your role and get started</p>
+          <p>Sign up to get started</p>
         </motion.div>
 
-        <motion.div className="role-selector" variants={itemVariants}>
-          <p className="role-label">Sign up as:</p>
-          <div className="role-options">
-            {roles.map((role) => (
-              <button
-                key={role.key}
-                type="button"
-                className={`role-btn ${userRole === role.key ? 'active' : ''}`}
-                onClick={() => setUserRole(role.key)}
-              >
-                {role.label}
-              </button>
-            ))}
-          </div>
-        </motion.div>
+        {/* Success Message */}
+        {successMessage && (
+          <motion.div 
+            className="success-message"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            ✓ {successMessage}
+          </motion.div>
+        )}
+
+        {/* Error Message from Backend */}
+        {error && (
+          <motion.div 
+            className="error-message"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            ✕ {error}
+          </motion.div>
+        )}
 
         <motion.form onSubmit={handleSubmit} variants={itemVariants}>
           <div className="form-row">
@@ -144,6 +176,7 @@ const SignUp = () => {
                 onChange={handleChange}
                 placeholder="John"
                 className={errors.firstName ? 'input-error' : ''}
+                disabled={loading}
               />
               {errors.firstName && <span className="error-message">{errors.firstName}</span>}
             </motion.div>
@@ -158,6 +191,7 @@ const SignUp = () => {
                 onChange={handleChange}
                 placeholder="Doe"
                 className={errors.lastName ? 'input-error' : ''}
+                disabled={loading}
               />
               {errors.lastName && <span className="error-message">{errors.lastName}</span>}
             </motion.div>
@@ -173,6 +207,7 @@ const SignUp = () => {
               onChange={handleChange}
               placeholder="you@example.com"
               className={errors.email ? 'input-error' : ''}
+              disabled={loading}
             />
             {errors.email && <span className="error-message">{errors.email}</span>}
           </motion.div>
@@ -189,11 +224,13 @@ const SignUp = () => {
                   onChange={handleChange}
                   placeholder="Enter password"
                   className={errors.password ? 'input-error' : ''}
+                  disabled={loading}
                 />
                 <button
                   type="button"
                   className="toggle-password"
                   onClick={() => setShowPassword(!showPassword)}
+                  disabled={loading}
                 >
                   {showPassword ? 'HIDE' : 'SHOW'}
                 </button>
@@ -212,11 +249,13 @@ const SignUp = () => {
                   onChange={handleChange}
                   placeholder="Confirm password"
                   className={errors.confirmPassword ? 'input-error' : ''}
+                  disabled={loading}
                 />
                 <button
                   type="button"
                   className="toggle-password"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  disabled={loading}
                 >
                   {showConfirmPassword ? 'HIDE' : 'SHOW'}
                 </button>
@@ -232,6 +271,7 @@ const SignUp = () => {
                 name="agreeTerms"
                 checked={formData.agreeTerms}
                 onChange={handleChange}
+                disabled={loading}
               />
               <span>
                 I agree to the <Link to="#">Terms & Privacy</Link>
@@ -243,12 +283,12 @@ const SignUp = () => {
           <motion.button
             type="submit"
             className="auth-btn"
-            disabled={isLoading}
+            disabled={loading}
             variants={itemVariants}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            whileHover={{ scale: loading ? 1 : 1.02 }}
+            whileTap={{ scale: loading ? 1 : 0.98 }}
           >
-            {isLoading ? 'Creating Account...' : 'Sign Up'}
+            {loading ? 'Creating Account...' : 'Sign Up'}
           </motion.button>
         </motion.form>
 

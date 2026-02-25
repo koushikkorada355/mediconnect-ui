@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../../store/slices/authSlice';
 import logo from '../../assets/images/profile2.png';
 import './Navbar.css';
 
@@ -8,7 +10,9 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const location = useLocation();
+  const { isLoggedIn, user } = useSelector(state => state.auth);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -26,6 +30,12 @@ const Navbar = () => {
       navigate(`/doctors?search=${searchQuery}`);
       setSearchQuery('');
     }
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    setIsMenuOpen(false);
+    navigate('/');
   };
 
   const navLinks = [
@@ -83,12 +93,50 @@ const Navbar = () => {
               Search
             </button>
           </form>
+
+          {/* Mobile Auth Buttons */}
+          <div className="mobile-auth-buttons">
+            {isLoggedIn ? (
+              <>
+                <div className="user-info">
+                  <p className="user-name">{user?.name || 'User'}</p>
+                </div>
+                <button 
+                  onClick={handleLogout} 
+                  className="btn-logout"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/login" className="btn-login" onClick={() => setIsMenuOpen(false)}>Login</Link>
+                <Link to="/signup" className="btn-signup" onClick={() => setIsMenuOpen(false)}>Get Started</Link>
+              </>
+            )}
+          </div>
         </div>
 
         {/* Right Section */}
         <div className="navbar-right">
-          <Link to="/login" className="btn-login">Login</Link>
-          <Link to="/signup" className="btn-signup">Get Started</Link>
+          {isLoggedIn ? (
+            <>
+              <div className="user-info">
+                <p className="user-name">{user?.name || 'User'}</p>
+              </div>
+              <button 
+                onClick={handleLogout} 
+                className="btn-logout"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="btn-login">Login</Link>
+              <Link to="/signup" className="btn-signup">Get Started</Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Hamburger */}

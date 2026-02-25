@@ -1,18 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
+import { loginUser } from '../../store/slices/authSlice';
 import './Login.css';
 
 const Login = () => {
   const navigate = useNavigate();
-  const [userRole, setUserRole] = useState('patient');
+  const dispatch = useDispatch();
+  const { isLoggedIn, loading, error } = useSelector(state => state.auth);
+  const [userRole, setUserRole] = useState('User');
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
   const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [loginError, setLoginError] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
+
+  // Redirect to home if already logged in
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate('/');
+    }
+  }, [isLoggedIn, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -54,13 +65,22 @@ const Login = () => {
       setErrors(newErrors);
       return;
     }
+
+    setLoginError(null);
     
-    setIsLoading(true);
-    setTimeout(() => {
-      console.log('Login successful:', { userRole, ...formData });
-      setIsLoading(false);
-      navigate('/');
-    }, 1500);
+    // Dispatch Redux login action
+    const result = await dispatch(loginUser({
+      email: formData.email,
+      password: formData.password,
+    }));
+
+    // Handle login response
+    if (result.type === loginUser.fulfilled.type) {
+      // Login successful - navigation handled by useEffect hook
+      console.log('Login successful');
+    } else if (result.type === loginUser.rejected.type) {
+      setLoginError(result.payload || 'Login failed');
+    }
   };
 
   const containerVariants = {
@@ -140,6 +160,16 @@ const Login = () => {
           onSubmit={handleSubmit}
           variants={itemVariants}
         >
+          {loginError && (
+            <motion.div 
+              className="error-box"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              variants={itemVariants}
+            >
+              {loginError}
+            </motion.div>
+          )}
           <motion.div 
             className="form-group"
             variants={itemVariants}
@@ -193,12 +223,12 @@ const Login = () => {
           <motion.button 
             type="submit"
             className="auth-btn"
-            disabled={isLoading}
+            disabled={loading}
             variants={itemVariants}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            {isLoading ? (
+            {loading ? (
               <span className="loading-spinner"></span>
             ) : (
               'Sign In'

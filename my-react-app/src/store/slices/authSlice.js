@@ -58,7 +58,6 @@ const parsedAuth = storedAuth ? JSON.parse(storedAuth) : null
 const initialState = {
   isLoggedIn: parsedAuth?.isLoggedIn || false,
   user: parsedAuth?.user || null,
-  token: parsedAuth?.token || null,
   loading: false,
   error: null,
 }
@@ -70,7 +69,6 @@ const authSlice = createSlice({
     logout: (state) => {
       state.isLoggedIn = false
       state.user = null
-      state.token = null
       state.loading = false
       state.error = null
       localStorage.removeItem('auth')
@@ -88,15 +86,8 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = false
-        state.isLoggedIn = true
-        state.user = action.payload.user || action.payload
         state.error = null
-        // Persist auth state to localStorage after registration
-        localStorage.setItem('auth', JSON.stringify({
-          isLoggedIn: true,
-          user: action.payload.user || action.payload,
-          token: state.token,
-        }))
+        
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false
@@ -114,9 +105,8 @@ const authSlice = createSlice({
         state.loading = false
         state.isLoggedIn = true
         state.user = action.payload.user
-        state.token = action.payload.token
         state.error = null
-        // Persist auth state and token to localStorage
+        // Persist auth state and token to localStorage (token stored here, not in Redux)
         localStorage.setItem('auth', JSON.stringify({
           isLoggedIn: true,
           user: action.payload.user,

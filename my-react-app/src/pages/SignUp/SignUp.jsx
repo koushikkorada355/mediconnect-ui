@@ -24,15 +24,14 @@ const SignUp = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [registrationSubmitted, setRegistrationSubmitted] = useState(false);
 
-  // Redirect to home only after a successful registration submission
+  // Redirect to login after successful registration
   useEffect(() => {
-    if (isLoggedIn && registrationSubmitted) {
-      setSuccessMessage('Registration successful! Redirecting...');
+    if (!loading && !error && successMessage) {
       setTimeout(() => {
-        navigate('/');
+        navigate('/login');
       }, 1500);
     }
-  }, [isLoggedIn, registrationSubmitted, navigate]);
+  }, [loading, error, successMessage, navigate]);
 
   // Clear error and reset auth state when component mounts
   useEffect(() => {
@@ -87,9 +86,6 @@ const SignUp = () => {
       return;
     }
     
-    // Mark that registration was submitted so we know to redirect after success
-    setRegistrationSubmitted(true);
-    
     // Dispatch registration action
     dispatch(registerUser({
       firstName: formData.firstName,
@@ -97,7 +93,10 @@ const SignUp = () => {
       email: formData.email,
       password: formData.password,
       role: 'USER',
-    }));
+    })).then(() => {
+      // Show success message after successful registration
+      setSuccessMessage('Registration successful! Redirecting to login...');
+    });
   };
 
   const containerVariants = {

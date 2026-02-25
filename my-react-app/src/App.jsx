@@ -5,6 +5,7 @@ import Footer from './components/Footer/Footer'
 import Home from './pages/Home/Home'
 import Login from './pages/Login/Login'
 import SignUp from './pages/SignUp/SignUp'
+import Hospitals from './pages/Hospitals/Hospitals'
 import './App.css'
 
 const App = () => {
@@ -18,7 +19,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/doctors" element={<div className="p-6 text-center">Find Doctors (Coming Soon)</div>} />
-          <Route path="/hospitals" element={<div className="p-6 text-center">Find Hospitals (Coming Soon)</div>} />
+          <Route path="/hospitals" element={<Hospitals />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
         </Routes>
@@ -27,6 +28,7 @@ const App = () => {
     </div>
   )
 }
+
 
 const AppWrapper = () => {
   return (

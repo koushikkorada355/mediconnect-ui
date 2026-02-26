@@ -156,7 +156,7 @@ const Hospitals = () => {
             <div className="hp-toolbar__sort">
               <span>Sort:</span>
               <select name="sortBy" value={filters.sortBy} onChange={handleFilterChange}>
-                <option value="name">Name A–Z</option>
+                <option value="name">Name A-Z</option>
                 <option value="rating">Top Rated</option>
                 <option value="beds">Most Beds</option>
               </select>
@@ -211,7 +211,7 @@ const Hospitals = () => {
                 <button className="hp-filters__apply" onClick={() => setShowFilters(false)}>
                   Apply Filters
                 </button>
-              </div>
+              </div>  
             </motion.div>
           )}
         </AnimatePresence>
@@ -302,6 +302,13 @@ const Hospitals = () => {
                   </div>
 
                   <h3 className="hcard__name">{h.name}</h3>
+
+                  {h.hospitalRating && (
+                    <div className="hcard__stars">
+                      {renderStars(h.hospitalRating)}
+                      <span className="hcard__stars-value">{Number(h.hospitalRating).toFixed(1)}</span>
+                    </div>
+                  )}
 
                   {h.address && (
                     <p className="hcard__address">

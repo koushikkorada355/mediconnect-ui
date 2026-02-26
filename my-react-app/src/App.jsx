@@ -6,6 +6,7 @@ import Home from './pages/Home/Home'
 import Login from './pages/Login/Login'
 import SignUp from './pages/SignUp/SignUp'
 import Hospitals from './pages/Hospitals/Hospitals'
+import Doctors from './pages/Doctors/Doctors'
 import './App.css'
 
 const App = () => {
@@ -18,7 +19,7 @@ const App = () => {
       <main className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/doctors" element={<div className="p-6 text-center">Find Doctors (Coming Soon)</div>} />
+          <Route path="/doctors" element={<Doctors />} />
           <Route path="/hospitals" element={<Hospitals />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />

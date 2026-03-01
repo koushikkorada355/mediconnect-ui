@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   FiSearch, FiMapPin, FiPhone, FiStar, FiFilter, FiX,
@@ -12,6 +13,7 @@ import './Hospitals.css';
 
 const Hospitals = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const hospitals = useSelector(selectHospitals);
   const loading = useSelector(selectLoading);
   const error = useSelector(selectError);
@@ -258,6 +260,7 @@ const Hospitals = () => {
               <motion.article
                 key={h._id}
                 className="hcard"
+                onClick={() => navigate(`/hospitals/${h._id}`)}
                 variants={{
                   hidden: { opacity: 0, y: 30, scale: 0.97 },
                   visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } },
@@ -351,7 +354,10 @@ const Hospitals = () => {
                     </div>
                   )}
 
-                  <button className="hcard__cta">
+                  <button className="hcard__cta" onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(`/hospitals/${h._id}`);
+                  }}>
                     View Details <FiArrowRight />
                   </button>
                 </div>

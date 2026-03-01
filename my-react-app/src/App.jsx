@@ -6,7 +6,11 @@ import Home from './pages/Home/Home'
 import Login from './pages/Login/Login'
 import SignUp from './pages/SignUp/SignUp'
 import Hospitals from './pages/Hospitals/Hospitals'
+import HospitalDetail from './pages/HospitalDetail/HospitalDetail'
 import Doctors from './pages/Doctors/Doctors'
+import DoctorDetail from './pages/DoctorDetail/DoctorDetail'
+import BloodBanks from './pages/BloodBanks/BloodBanks'
+import BloodBankDetail from './pages/BloodBankDetail/BloodBankDetail'
 import './App.css'
 
 const App = () => {
@@ -20,7 +24,11 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/doctors" element={<Doctors />} />
+          <Route path="/doctors/:id" element={<DoctorDetail />} />
           <Route path="/hospitals" element={<Hospitals />} />
+          <Route path="/hospitals/:id" element={<HospitalDetail />} />
+          <Route path="/bloodbanks" element={<BloodBanks />} />
+          <Route path="/blood-banks/:id" element={<BloodBankDetail />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
         </Routes>

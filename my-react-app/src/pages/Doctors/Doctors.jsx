@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   FiSearch, FiMapPin, FiPhone, FiStar, FiFilter, FiX,
@@ -12,6 +13,7 @@ import './Doctors.css';
 
 const Doctors = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const doctors = useSelector(selectDoctors);
   const loading = useSelector(selectDoctorLoading);
   const error = useSelector(selectDoctorError);
@@ -265,6 +267,8 @@ const Doctors = () => {
                 }}
                 whileHover={{ y: -6 }}
                 transition={{ duration: 0.25 }}
+                onClick={() => navigate(`/doctors/${d._id}`)}
+                style={{ cursor: 'pointer' }}
               >
                 {/* IMAGE */}
                 <div className="dcard__img-wrap">

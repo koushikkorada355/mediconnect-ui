@@ -9,6 +9,8 @@ import Hospitals from './pages/Hospitals/Hospitals'
 import HospitalDetail from './pages/HospitalDetail/HospitalDetail'
 import Doctors from './pages/Doctors/Doctors'
 import DoctorDetail from './pages/DoctorDetail/DoctorDetail'
+import Appointment from './pages/Appointment/Appointment'
+import Payment from './pages/Payment/Payment'
 import BloodBanks from './pages/BloodBanks/BloodBanks'
 import BloodBankDetail from './pages/BloodBankDetail/BloodBankDetail'
 import './App.css'
@@ -25,6 +27,9 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/doctors" element={<Doctors />} />
           <Route path="/doctors/:id" element={<DoctorDetail />} />
+          <Route path="/doctor/:id" element={<DoctorDetail />} />
+          <Route path="/appointment/:doctorId" element={<Appointment />} />
+          <Route path="/payment/:appointmentId" element={<Payment />} />
           <Route path="/hospitals" element={<Hospitals />} />
           <Route path="/hospitals/:id" element={<HospitalDetail />} />
           <Route path="/bloodbanks" element={<BloodBanks />} />

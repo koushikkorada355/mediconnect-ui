@@ -42,6 +42,7 @@ export const loginUser = createAsyncThunk(
         password: userData.password,
       })
 
+      // Backend returns: { token, role }
       return response.data
     } catch (error) {
       return rejectWithValue(
@@ -57,7 +58,8 @@ const parsedAuth = storedAuth ? JSON.parse(storedAuth) : null
 
 const initialState = {
   isLoggedIn: parsedAuth?.isLoggedIn || false,
-  user: parsedAuth?.user || null,
+  token: parsedAuth?.token || null,
+  role: parsedAuth?.role || null,
   loading: false,
   error: null,
 }
@@ -68,7 +70,8 @@ const authSlice = createSlice({
   reducers: {
     logout: (state) => {
       state.isLoggedIn = false
-      state.user = null
+      state.token = null
+      state.role = null
       state.loading = false
       state.error = null
       localStorage.removeItem('auth')
@@ -87,7 +90,6 @@ const authSlice = createSlice({
       .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = false
         state.error = null
-        
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false
@@ -104,13 +106,14 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false
         state.isLoggedIn = true
-        state.user = action.payload.user
+        state.token = action.payload.token
+        state.role = action.payload.role
         state.error = null
-        // Persist auth state and token to localStorage (token stored here, not in Redux)
+        // Persist to localStorage
         localStorage.setItem('auth', JSON.stringify({
           isLoggedIn: true,
-          user: action.payload.user,
           token: action.payload.token,
+          role: action.payload.role,
         }))
       })
       .addCase(loginUser.rejected, (state, action) => {

@@ -3,6 +3,8 @@ import authReducer from './slices/authSlice'
 import hospitalReducer from './slices/hospitalSlice'
 import doctorReducer from './slices/doctorSlice'
 import bloodBankReducer from './slices/bloodBankSlice'
+import appointmentReducer from './slices/appointmentSlice'
+import reviewReducer from './slices/reviewSlice'
 
 const store = configureStore({
   reducer: {
@@ -10,6 +12,8 @@ const store = configureStore({
     hospital: hospitalReducer,
     doctor: doctorReducer,
     bloodBank: bloodBankReducer,
+    appointment: appointmentReducer,
+    review: reviewReducer,
   },
 })
 

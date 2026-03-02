@@ -1061,3 +1061,152 @@
     padding: 3px 8px;
   }
 }
+
+/* ============ FEATURED HOSPITALS SECTION ============ */
+
+.hp-featured {
+  margin: 60px 0;
+  padding: 0 24px;
+}
+
+.hp-featured__header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.hp-featured__header h2 {
+  font-size: 32px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 8px;
+  letter-spacing: -0.02em;
+}
+
+.hp-featured__header p {
+  font-size: 15px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.hp-featured__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 28px;
+}
+
+/* Featured Hospital Card */
+.hp-featured__card {
+  background: white;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hp-featured__card:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.hp-featured__card-img {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.hp-featured__card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.hp-featured__card:hover .hp-featured__card-img img {
+  transform: scale(1.08);
+}
+
+.hp-featured__card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 60%, rgba(0, 0, 0, 0.3));
+}
+
+.hp-featured__card-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: linear-gradient(135deg, #fcd34d, #f59e0b);
+  color: #7c2d12;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.hp-featured__card-content {
+  padding: 24px;
+}
+
+.hp-featured__card-content h3 {
+  font-size: 18px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+  transition: color 0.2s;
+}
+
+.hp-featured__card-content h3:hover {
+  color: #0d9488;
+}
+
+.hp-featured__location {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hp-featured__review {
+  margin: 16px 0;
+}
+
+.hp-featured__cta {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #0d9488, #0f766e);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 16px;
+}
+
+.hp-featured__cta:hover {
+  background: linear-gradient(135deg, #0f766e, #115e59);
+  box-shadow: 0 6px 20px rgba(13, 148, 136, 0.3);
+}
+
+@media (max-width: 768px) {
+  .hp-featured__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hp-featured__header h2 {
+    font-size: 24px;
+  }
+
+  .hp-featured__card-content {
+    padding: 18px;
+  }
+}

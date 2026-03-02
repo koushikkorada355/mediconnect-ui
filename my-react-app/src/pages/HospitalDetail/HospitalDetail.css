@@ -732,6 +732,162 @@
 }
 
 /* ========================================================
+   DOCTORS SECTION
+   ======================================================== */
+.hosp-detail__doctors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  margin-top: 20px;
+}
+
+.hosp-detail__doctor-card {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: .3s ease;
+  cursor: pointer;
+}
+
+.hosp-detail__doctor-card:hover {
+  border-color: #0066CC;
+  box-shadow: 0 12px 32px rgba(0,102,204,.15);
+}
+
+.hosp-detail__doctor-image {
+  width: 100%;
+  height: 240px;
+  overflow: hidden;
+  background: #F0F4FF;
+}
+
+.hosp-detail__doctor-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .3s ease;
+}
+
+.hosp-detail__doctor-card:hover .hosp-detail__doctor-image img {
+  transform: scale(1.05);
+}
+
+.hosp-detail__doctor-info {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.hosp-detail__doctor-info h4 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #1E293B;
+  margin: 0 0 6px;
+}
+
+.hosp-detail__doctor-specialty {
+  font-size: .9rem;
+  color: #0066CC;
+  font-weight: 700;
+  margin: 0 0 12px;
+}
+
+.hosp-detail__doctor-exp,
+.hosp-detail__doctor-license {
+  font-size: .85rem;
+  color: #64748B;
+  margin: 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hosp-detail__doctor-exp svg,
+.hosp-detail__doctor-license svg {
+  width: 16px;
+  height: 16px;
+  color: #0066CC;
+}
+
+.hosp-detail__doctor-contact {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.hosp-detail__doctor-phone {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 12px;
+  background: #F0F4FF;
+  color: #0066CC;
+  border: 1.5px solid #D4E0FF;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: .85rem;
+  transition: .2s ease;
+}
+
+.hosp-detail__doctor-phone:hover {
+  background: #0066CC;
+  color: white;
+  border-color: #0066CC;
+}
+
+.hosp-detail__doctor-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 12px;
+  background: #0066CC;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: .85rem;
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+.hosp-detail__doctor-btn:hover {
+  background: #0052A3;
+  transform: translateY(-2px);
+}
+
+/* Empty State */
+.hosp-detail__empty {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.hosp-detail__empty svg {
+  font-size: 3rem;
+  color: #CBD5E1;
+  margin-bottom: 16px;
+}
+
+.hosp-detail__empty h3 {
+  font-size: 1.3rem;
+  color: #1E293B;
+  margin-bottom: 8px;
+}
+
+.hosp-detail__empty p {
+  color: #64748B;
+  margin: 0;
+}
+
+/* ========================================================
    SKELETON LOADER
    ======================================================== */
 .hosp-detail__skeleton {
@@ -877,4 +1033,12 @@
     padding: 12px 16px;
     font-size: .85rem;
   }
+}
+
+/* ============ REVIEWS WRAPPER ============ */
+
+.hosp-detail__reviews-wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 24px 40px;
 }

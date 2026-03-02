@@ -7,7 +7,10 @@ import {
   FiClock, FiActivity, FiChevronDown, FiArrowRight, FiHeart, FiShield
 } from 'react-icons/fi';
 import { getAllHospitals } from '../../store/slices/hospitalSlice';
+import { getHospitalReviews } from '../../store/slices/reviewSlice';
 import { selectHospitals, selectLoading, selectError } from '../../store/selectors/hospitalSelectors';
+import { selectTopHospitalReview } from '../../store/selectors/reviewSelectors';
+import TopReviewCard from '../../components/TopReviewCard/TopReviewCard';
 import hospitalImg from '../../assets/images/hospital1.jpeg';
 import './Hospitals.css';
 
@@ -53,6 +56,92 @@ const Hospitals = () => {
   const resetFilters = () => {
     setFilters({ name: '', city: '', state: '', minRating: 0, hasEmergency: false, hasBeds: false, sortBy: 'name' });
     setSearchQuery('');
+  };
+
+  // Featured Hospitals Component with Top Reviews
+  const FeaturedHospitalsSection = ({ hospitals, dispatch, navigate }) => {
+    const topHospitals = hospitals.filter(h => h.hospitalRating && h.hospitalRating >= 4).slice(0, 3);
+    if (topHospitals.length === 0) return null;
+
+    return (
+      <motion.section
+        className="hp-featured"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+      >
+        <div className="hp-featured__header">
+          <h2>⭐ Top-Rated Hospitals</h2>
+          <p>Highly praised by patients with excellent reviews</p>
+        </div>
+
+        <motion.div
+          className="hp-featured__grid"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: { opacity: 0 },
+            visible: { opacity: 1, transition: { staggerChildren: 0.15 } }
+          }}
+        >
+          {topHospitals.map(h => (
+            <FeaturedHospitalCard key={h._id} hospital={h} dispatch={dispatch} navigate={navigate} />
+          ))}
+        </motion.div>
+      </motion.section>
+    );
+  };
+
+  // Featured Hospital Card with Top Review
+  const FeaturedHospitalCard = ({ hospital, dispatch, navigate }) => {
+    const topReview = useSelector(selectTopHospitalReview);
+    
+    useEffect(() => {
+      if (hospital._id) {
+        dispatch(getHospitalReviews({ hospitalId: hospital._id, page: 1, limit: 5, sortBy: 'recent' }));
+      }
+    }, [hospital._id, dispatch]);
+
+    return (
+      <motion.article
+        className="hp-featured__card"
+        variants={{
+          hidden: { opacity: 0, y: 20, scale: 0.95 },
+          visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5 } }
+        }}
+        whileHover={{ y: -8 }}
+      >
+        <div className="hp-featured__card-img" onClick={() => navigate(`/hospitals/${hospital._id}`)}>
+          <img src={hospital.hospitalImage || hospitalImg} alt={hospital.name} onError={(e) => { e.target.src = hospitalImg; }} />
+          <div className="hp-featured__card-overlay" />
+          <div className="hp-featured__card-badge">{hospital.hospitalRating?.toFixed(1)} ⭐</div>
+        </div>
+
+        <div className="hp-featured__card-content">
+          <h3 onClick={() => navigate(`/hospitals/${hospital._id}`)} style={{ cursor: 'pointer' }}>
+            {hospital.name}
+          </h3>
+          <p className="hp-featured__location">
+            <FiMapPin size={14} /> {hospital.address?.substring(0, 40)}...
+          </p>
+
+          {topReview && (
+            <div className="hp-featured__review">
+              <TopReviewCard review={topReview} isVisible={true} />
+            </div>
+          )}
+
+          <motion.button
+            className="hp-featured__cta"
+            onClick={() => navigate(`/hospitals/${hospital._id}`)}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            View Hospital <FiArrowRight />
+          </motion.button>
+        </div>
+      </motion.article>
+    );
   };
 
   const hasActiveFilters = Object.entries(filters).some(
@@ -226,6 +315,11 @@ const Hospitals = () => {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* ====== TOP REVIEWED HOSPITALS SECTION ====== */}
+        {!loading && hospitals && hospitals.length > 0 && (
+          <FeaturedHospitalsSection hospitals={hospitals.slice(0, 3)} dispatch={dispatch} navigate={navigate} />
+        )}
 
         {/* ====== SKELETON ====== */}
         {loading && (

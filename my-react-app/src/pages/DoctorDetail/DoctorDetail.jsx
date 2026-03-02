@@ -3,12 +3,16 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  FiMapPin, FiPhone, FiMail, FiCalendar, FiAward, FiStar, FiX, FiArrowLeft,
+  FiMapPin, FiPhone, FiMail, FiCalendar, FiAward, FiX, FiArrowLeft,
   FiCheck, FiAlertCircle, FiClock, FiUsers, FiTrendingUp, FiBriefcase,
   FiArrowRight, FiHeart, FiGlobe, FiLinkedin, FiTwitter, FiInstagram
 } from 'react-icons/fi';
+import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
 import { getDoctorById } from '../../store/slices/doctorSlice';
 import { selectDoctor, selectDoctorLoading } from '../../store/selectors/doctorSelectors';
+import { getDoctorReviews } from '../../store/slices/reviewSlice';
+import { selectDoctorAverageRating, selectDoctorTotalReviews } from '../../store/selectors/reviewSelectors';
+import ReviewSection from '../../components/ReviewSection/ReviewSection';
 import doctorImg from '../../assets/images/doctor2.jpg';
 import './DoctorDetail.css';
 
@@ -18,13 +22,15 @@ const DoctorDetail = () => {
   const dispatch = useDispatch();
   const doctor = useSelector(selectDoctor);
   const loading = useSelector(selectDoctorLoading);
+  const reviewRating = useSelector(selectDoctorAverageRating);
+  const reviewCount = useSelector(selectDoctorTotalReviews);
   const [activeTab, setActiveTab] = useState('overview');
   const [isFavorite, setIsFavorite] = useState(false);
-  const [showBooking, setShowBooking] = useState(false);
 
   useEffect(() => {
     if (id) {
       dispatch(getDoctorById(id));
+      dispatch(getDoctorReviews({ doctorId: id, page: 1, limit: 10, sortBy: 'recent' }));
     }
     window.scrollTo(0, 0);
   }, [id, dispatch]);
@@ -66,16 +72,19 @@ const DoctorDetail = () => {
   }
 
   const renderStars = (rating) => {
-    return Array.from({ length: 5 }).map((_, i) => (
-      <FiStar
-        key={i}
-        className={`star ${i < Math.round(Number(rating) || 0) ? 'star-filled' : ''}`}
-      />
-    ));
+    const stars = [];
+    const r = Number(rating) || 0;
+    const full = Math.floor(r);
+    const hasHalf = r % 1 >= 0.5;
+    for (let i = 0; i < full; i++) stars.push(<FaStar key={`f${i}`} className="star star-filled" />);
+    if (hasHalf) stars.push(<FaStarHalfAlt key="h" className="star star-filled" />);
+    const rem = 5 - full - (hasHalf ? 1 : 0);
+    for (let i = 0; i < rem; i++) stars.push(<FaRegStar key={`e${i}`} className="star" />);
+    return stars;
   };
 
-  const availableDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-  const timeSlots = ['09:00 AM', '10:00 AM', '11:00 AM', '02:00 PM', '03:00 PM', '04:00 PM'];
+  const displayRating = reviewRating || 0;
+  const displayReviewCount = reviewCount || 0;
 
   return (
     <div className="doc-det">
@@ -143,9 +152,9 @@ const DoctorDetail = () => {
 
             {/* Rating */}
             <div className="doc-det__rating">
-              <div className="doc-det__stars">{renderStars(doctor.rating || 4.5)}</div>
-              <span className="doc-det__rating-value">{doctor.rating || 4.5}/5</span>
-              <span className="doc-det__review-count">({Math.floor(Math.random() * 200) + 50} reviews)</span>
+              <div className="doc-det__stars">{renderStars(displayRating)}</div>
+              <span className="doc-det__rating-value">{displayRating.toFixed(1)}/5</span>
+              <span className="doc-det__review-count">({displayReviewCount} {displayReviewCount === 1 ? 'review' : 'reviews'})</span>
             </div>
 
             {/* Quick Info */}
@@ -164,11 +173,45 @@ const DoctorDetail = () => {
               </div>
             </div>
 
+            {/* Working Hospitals */}
+            {doctor.hospitals && doctor.hospitals.length > 0 && (
+              <motion.div
+                className="doc-det__working-hospitals"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+              >
+                <h4 className="doc-det__hospitals-title">Working At</h4>
+                <div className="doc-det__hospitals-list">
+                  {doctor.hospitals.map((hospital, idx) => (
+                    <motion.div
+                      key={hospital.hospitalId}
+                      className="doc-det__hospital-badge"
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ delay: idx * 0.05 }}
+                    >
+                      <div className="doc-det__hospital-name">
+                        {hospital.hospitalName}
+                      </div>
+                      <div className="doc-det__hospital-dept">
+                        {hospital.department}
+                      </div>
+                      <div className="doc-det__hospital-hours">
+                        {hospital.consultationHours}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
             {/* CTA Buttons */}
             <div className="doc-det__cta-group">
               <motion.button
                 className="doc-det__btn doc-det__btn--primary"
-                onClick={() => setShowBooking(true)}
+                onClick={() => {
+                  navigate(`/appointment/${id}`);
+                }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -241,7 +284,7 @@ const DoctorDetail = () => {
                   <h3 className="doc-det__card-title">
                     <FiUsers /> Total Patients
                   </h3>
-                  <p>{Math.floor(Math.random() * 2000) + 500}+ patients treated</p>
+                  <p>{displayReviewCount > 0 ? `${displayReviewCount}+ patients reviewed` : 'No reviews yet'}</p>
                 </div>
               </div>
               <div className="doc-det__bio">
@@ -345,32 +388,18 @@ const DoctorDetail = () => {
               <div className="doc-det__availability">
                 <div>
                   <h4 className="doc-det__availability-title">
-                    <FiClock /> Available Days
+                    <FiClock /> Schedule
                   </h4>
-                  <div className="doc-det__days">
-                    {availableDays.map(day => (
-                      <div key={day} className="doc-det__day-tag">
-                        {day}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <h4 className="doc-det__availability-title">
-                    <FiCalendar /> Available Time Slots
-                  </h4>
-                  <div className="doc-det__time-slots">
-                    {timeSlots.map(time => (
-                      <div key={time} className="doc-det__time-slot">
-                        {time}
-                      </div>
-                    ))}
-                  </div>
+                  <p className="doc-det__availability-note">
+                    Book an appointment to see available dates and time slots for this doctor.
+                  </p>
                 </div>
               </div>
               <motion.button
                 className="doc-det__btn doc-det__btn--primary doc-det__btn--full"
-                onClick={() => setShowBooking(true)}
+                onClick={() => {
+                  navigate(`/appointment/${id}`);
+                }}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -379,54 +408,10 @@ const DoctorDetail = () => {
             </motion.section>
           )}
         </AnimatePresence>
-      </div>
 
-      {/* Booking Modal */}
-      <AnimatePresence>
-        {showBooking && (
-          <motion.div
-            className="doc-det__modal-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setShowBooking(false)}
-          >
-            <motion.div
-              className="doc-det__modal"
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              transition={{ type: 'spring', damping: 25 }}
-              onClick={e => e.stopPropagation()}
-            >
-              <button
-                className="doc-det__modal-close"
-                onClick={() => setShowBooking(false)}
-              >
-                <FiX />
-              </button>
-              <h3>Book Appointment</h3>
-              <p>With Dr. {doctor.userId?.name}</p>
-              <div className="doc-det__booking-form">
-                <input type="date" placeholder="Select Date" />
-                <select>
-                  {timeSlots.map(slot => (
-                    <option key={slot} value={slot}>{slot}</option>
-                  ))}
-                </select>
-                <textarea placeholder="Any notes or concerns?" rows="4" />
-                <motion.button
-                  className="doc-det__btn doc-det__btn--primary doc-det__btn--full"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  Confirm Booking
-                </motion.button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+        {/* Reviews Section */}
+        <ReviewSection doctorId={id} reviewType="DOCTOR" />
+      </div>
     </div>
   );
 };

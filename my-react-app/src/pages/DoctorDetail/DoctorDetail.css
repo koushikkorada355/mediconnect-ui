@@ -778,6 +778,115 @@
   box-shadow: 0 0 0 3px rgba(13,148,136,.1);
 }
 
+/* Form Groups */
+.doc-det__form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.doc-det__form-group label {
+  font-size: .9rem;
+  font-weight: 700;
+  color: var(--clr-text);
+}
+
+.doc-det__form-input,
+.doc-det__form-select,
+.doc-det__form-textarea {
+  padding: 12px 16px;
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  font-size: .95rem;
+  font-weight: 500;
+  color: var(--clr-text);
+  font-family: inherit;
+  transition: var(--transition);
+}
+
+.doc-det__form-input:focus,
+.doc-det__form-select:focus,
+.doc-det__form-textarea:focus {
+  outline: none;
+  border-color: var(--clr-primary);
+  box-shadow: 0 0 0 3px rgba(13,148,136,.1);
+}
+
+.doc-det__form-textarea {
+  resize: vertical;
+}
+
+/* Working Hospitals */
+.doc-det__working-hospitals {
+  margin: 28px 0;
+  padding: 24px;
+  background: linear-gradient(135deg, rgba(13,148,136,.05), rgba(20,184,166,.05));
+  border: 1.5px solid rgba(13,148,136,.15);
+  border-radius: var(--radius-lg);
+}
+
+.doc-det__hospitals-title {
+  font-size: .95rem;
+  font-weight: 700;
+  color: var(--clr-primary);
+  margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.doc-det__hospitals-title::before {
+  content: '';
+  width: 4px;
+  height: 4px;
+  background: var(--clr-primary);
+  border-radius: 50%;
+}
+
+.doc-det__hospitals-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.doc-det__hospital-badge {
+  padding: 16px;
+  background: white;
+  border: 1.5px solid rgba(13,148,136,.2);
+  border-radius: var(--radius-md);
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.doc-det__hospital-badge:hover {
+  border-color: var(--clr-primary);
+  box-shadow: 0 4px 12px rgba(13,148,136,.15);
+  transform: translateY(-2px);
+}
+
+.doc-det__hospital-name {
+  font-size: .95rem;
+  font-weight: 700;
+  color: var(--clr-text);
+  margin-bottom: 4px;
+}
+
+.doc-det__hospital-dept {
+  font-size: .85rem;
+  color: var(--clr-primary);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.doc-det__hospital-hours {
+  font-size: .8rem;
+  color: var(--clr-text-secondary);
+  font-weight: 500;
+}
+
 /* ---------- RESPONSIVE ---------- */
 @media (max-width: 1024px) {
   .doc-det__hero-content {
@@ -897,4 +1006,13 @@
   .doc-det__modal {
     padding: 24px 20px;
   }
+}
+
+/* ============ AVAILABILITY NOTE ============ */
+
+.doc-det__availability-note {
+  font-size: 0.95rem;
+  color: var(--clr-text-secondary, #64748b);
+  line-height: 1.6;
+  margin-top: 8px;
 }

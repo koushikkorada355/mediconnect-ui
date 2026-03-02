@@ -12,7 +12,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
-  const { isLoggedIn, user } = useSelector(state => state.auth);
+  const { isLoggedIn, role } = useSelector(state => state.auth);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -100,7 +100,7 @@ const Navbar = () => {
             {isLoggedIn ? (
               <>
                 <div className="user-info">
-                  <p className="user-name">{user?.name || 'User'}</p>
+                  <p className="user-name">{role || 'User'}</p>
                 </div>
                 <button 
                   onClick={handleLogout} 
@@ -123,7 +123,7 @@ const Navbar = () => {
           {isLoggedIn ? (
             <>
               <div className="user-info">
-                <p className="user-name">{user?.name || 'User'}</p>
+                <p className="user-name">{role || 'User'}</p>
               </div>
               <button 
                 onClick={handleLogout} 

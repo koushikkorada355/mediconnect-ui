@@ -6,10 +6,15 @@ import {
   FiMapPin, FiPhone, FiMail, FiGlobe, FiClock, FiAward, FiShoppingCart,
   FiUsers, FiActivity, FiHome, FiX, FiArrowLeft, FiCheck, FiAlertCircle,
   FiDroplet, FiZap, FiTrendingUp, FiShield, FiCalendar, FiDollarSign,
-  FiStar, FiArrowRight
+  FiArrowRight
 } from 'react-icons/fi';
+import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
 import { getHospitalById } from '../../store/slices/hospitalSlice';
 import { selectHospitalDetail, selectHospitalLoading } from '../../store/selectors/hospitalSelectors';
+import { getHospitalReviews } from '../../store/slices/reviewSlice';
+import { selectHospitalAverageRating, selectHospitalTotalReviews, selectTopHospitalReview } from '../../store/selectors/reviewSelectors';
+import ReviewSection from '../../components/ReviewSection/ReviewSection';
+import TopReviewCard from '../../components/TopReviewCard/TopReviewCard';
 import './HospitalDetail.css';
 
 const HospitalDetail = () => {
@@ -18,12 +23,16 @@ const HospitalDetail = () => {
   const dispatch = useDispatch();
   const hospital = useSelector(selectHospitalDetail);
   const loading = useSelector(selectHospitalLoading);
+  const reviewRating = useSelector(selectHospitalAverageRating);
+  const reviewCount = useSelector(selectHospitalTotalReviews);
+  const topReview = useSelector(selectTopHospitalReview);
   const [activeTab, setActiveTab] = useState('overview');
   const [expandedSection, setExpandedSection] = useState(null);
 
   useEffect(() => {
     if (id) {
       dispatch(getHospitalById(id));
+      dispatch(getHospitalReviews({ hospitalId: id, page: 1, limit: 10, sortBy: 'recent' }));
     }
     window.scrollTo(0, 0);
   }, [id, dispatch]);
@@ -61,16 +70,17 @@ const HospitalDetail = () => {
   const renderStars = (rating) => {
     const stars = [];
     const r = Number(rating) || 0;
-    for (let i = 1; i <= 5; i++) {
-      stars.push(
-        <FiStar
-          key={i}
-          className={`star ${i <= Math.round(r) ? 'star-filled' : ''}`}
-        />
-      );
-    }
+    const full = Math.floor(r);
+    const hasHalf = r % 1 >= 0.5;
+    for (let i = 0; i < full; i++) stars.push(<FaStar key={`f${i}`} className="star star-filled" />);
+    if (hasHalf) stars.push(<FaStarHalfAlt key="h" className="star star-filled" />);
+    const rem = 5 - full - (hasHalf ? 1 : 0);
+    for (let i = 0; i < rem; i++) stars.push(<FaRegStar key={`e${i}`} className="star" />);
     return stars;
   };
+
+  const displayRating = reviewRating || 0;
+  const displayReviewCount = reviewCount || 0;
 
   return (
     <div className="hosp-detail">
@@ -99,10 +109,10 @@ const HospitalDetail = () => {
             <h1>{hospital.name}</h1>
             <div className="hosp-detail__rating">
               <div className="hosp-detail__stars">
-                {renderStars(hospital.rating || 4.5)}
+                {renderStars(displayRating)}
               </div>
-              <span className="hosp-detail__rating-value">{hospital.rating || 4.5}/5</span>
-              <span className="hosp-detail__review-count">({hospital.reviewCount || 128} reviews)</span>
+              <span className="hosp-detail__rating-value">{displayRating.toFixed(1)}/5</span>
+              <span className="hosp-detail__review-count">({displayReviewCount} {displayReviewCount === 1 ? 'review' : 'reviews'})</span>
             </div>
             <div className="hosp-detail__quick-info">
               <div className="hosp-detail__info-item">
@@ -150,7 +160,7 @@ const HospitalDetail = () => {
 
       {/* Tabs */}
       <div className="hosp-detail__tabs">
-        {['overview', 'facilities', 'services', 'hours', 'contact'].map(tab => (
+        {['overview', 'doctors', 'facilities', 'services', 'hours', 'contact'].map(tab => (
           <motion.button
             key={tab}
             className={`hosp-detail__tab ${activeTab === tab ? 'active' : ''}`}
@@ -206,6 +216,18 @@ const HospitalDetail = () => {
                 </div>
               </div>
 
+              {/* Top Review Card */}
+              {topReview && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3, duration: 0.5 }}
+                  style={{ marginTop: '32px' }}
+                >
+                  <TopReviewCard review={topReview} isVisible={true} />
+                </motion.div>
+              )}
+
               {/* Accreditations */}
               {hospital.accreditations?.length > 0 && (
                 <div className="hosp-detail__section">
@@ -219,6 +241,66 @@ const HospitalDetail = () => {
                       </span>
                     ))}
                   </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Doctors Tab */}
+          {activeTab === 'doctors' && (
+            <div className="hosp-detail__tab-content">
+              {hospital.doctors && hospital.doctors.length > 0 ? (
+                <div className="hosp-detail__doctors-grid">
+                  {hospital.doctors.map((doctor, idx) => (
+                    <motion.div
+                      key={doctor._id}
+                      className="hosp-detail__doctor-card"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: idx * 0.1 }}
+                      onClick={() => navigate(`/doctor/${doctor._id}`)}
+                      whileHover={{ y: -8, boxShadow: '0 12px 24px rgba(0,0,0,0.15)' }}
+                    >
+                      <div className="hosp-detail__doctor-image">
+                        <img 
+                          src={doctor.profileImage || 'https://via.placeholder.com/200?text=Dr'} 
+                          alt={doctor.userId?.name}
+                        />
+                      </div>
+                      <div className="hosp-detail__doctor-info">
+                        <h4>{doctor.userId?.name}</h4>
+                        <p className="hosp-detail__doctor-specialty">
+                          {doctor.specialization}
+                        </p>
+                        {doctor.experience && (
+                          <p className="hosp-detail__doctor-exp">
+                            <FiTrendingUp /> {doctor.experience}+ Years Experience
+                          </p>
+                        )}
+                        {doctor.licenseNumber && (
+                          <p className="hosp-detail__doctor-license">
+                            <FiAward /> Lic: {doctor.licenseNumber}
+                          </p>
+                        )}
+                        <div className="hosp-detail__doctor-contact">
+                          {doctor.userId?.phone && (
+                            <a href={`tel:${doctor.userId.phone}`} className="hosp-detail__doctor-phone">
+                              <FiPhone /> Call
+                            </a>
+                          )}
+                          <button className="hosp-detail__doctor-btn">
+                            <FiCalendar /> Book
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              ) : (
+                <div className="hosp-detail__empty">
+                  <FiUsers />
+                  <h3>No Doctors Available</h3>
+                  <p>No doctors are currently registered at this hospital</p>
                 </div>
               )}
             </div>
@@ -400,6 +482,11 @@ const HospitalDetail = () => {
           </button>
         </div>
       </motion.div>
+
+      {/* Reviews Section */}
+      <div className="hosp-detail__reviews-wrapper">
+        <ReviewSection doctorId={id} reviewType="HOSPITAL" />
+      </div>
     </div>
   );
 };
